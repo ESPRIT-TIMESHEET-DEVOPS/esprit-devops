@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import tn.esprit.spring.entities.Mission;
+import tn.esprit.spring.exceptions.InvalidDatabaseOperationException;
 import tn.esprit.spring.repository.MissionRepository;
 
 import javax.validation.constraints.NotNull;
@@ -20,39 +21,39 @@ public class MissionServiceImpl implements IMissionService{
     @Autowired
     public MissionServiceImpl(MissionRepository missionRepository){this.missionRepository = missionRepository;}
     @Override
-    public Mission Add(@Validated Mission mission) throws Exception {
+    public Mission add(@Validated Mission mission) throws InvalidDatabaseOperationException {
         try {
             return missionRepository.save(mission);
         } catch (NonTransientDataAccessException | RecoverableDataAccessException | TransientDataAccessException e){
-            throw new Exception(e);
+            throw new InvalidDatabaseOperationException(e);
         }
     }
 
     @Override
-    public Mission Update(@Validated Mission mission) throws Exception{
+    public Mission update(@Validated Mission mission) throws InvalidDatabaseOperationException{
         try {
             return missionRepository.save(mission);
         } catch (NonTransientDataAccessException | RecoverableDataAccessException | TransientDataAccessException e){
-            throw new Exception(e);
+            throw new InvalidDatabaseOperationException(e);
         }
     }
 
     @Override
-    public void Delete(@NotNull int missionId) {
+    public void delete(@NotNull int missionId) {
         missionRepository.deleteById(missionId);
     }
 
     @Override
-    public Optional<Mission> GetById(int missionId) {
+    public Optional<Mission> getById(int missionId) {
         return missionRepository.findById(missionId);
     }
 
     @Override
-    public List<Mission> GetPaginated(final int page, final int size, final String name, final String departement) {
+    public List<Mission> getPaginated(final int page, final int size, final String name, final String departement) {
         return missionRepository.findAllByNameLikeAndDepartementNameOrderByName(name,departement,PageRequest.of(page, size));
     }
     @Override
-    public Iterable<Mission> GetAll(){
+    public Iterable<Mission> getAll(){
         return missionRepository.findAll();
     }
 }

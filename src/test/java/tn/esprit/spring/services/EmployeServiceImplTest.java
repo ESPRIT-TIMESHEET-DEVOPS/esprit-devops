@@ -23,71 +23,71 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EmployeServiceImplTest {
-	
+class EmployeServiceImplTest {
+
 	@Autowired
 	IEmployeService iemployeservice;
 
-	
-	
+
+
 	@Test
-	public void testAjouterEmploye() {
+	void testAjouterEmploye() {
 	Employe employe = new Employe("alex", "bernar", "alex.bernar@gmail.com",true,Role.INGENIEUR);
 	 int i = iemployeservice.ajouterEmploye(employe);
 	 assertEquals(16, i);
 	}
-	
-	
+
+
 	@Test
-	public void testAjouterEmploye2() {
+	void testAjouterEmploye2() {
 	Employe employe = new Employe("alex", "bernar", "alex.bernar@gmail.com",true,Role.INGENIEUR);
 	 int i = iemployeservice.ajouterEmploye(employe);
 	 assertNotEquals(20, i);
 	}
-	
-	
+
+
 	/*@Test
-	public void testajouterContrat() {
+	void testajouterContrat() {
 	Contrat contrat = new Contrat(new Date() ,"svp",1500);
 	int i = iemployeservice.ajouterContrat(contrat);
 	assertEquals(1, i);
 	}
-	
+
 	@Test
-	public void testajouterContrat2() {
+	void testajouterContrat2() {
 	Contrat contrat = new Contrat(new Date() ,"svp",1500);
 	int i = iemployeservice.ajouterContrat(contrat);
 	assertNotEquals(3, i);
 	}*/
-	
+
 	@Test
-	public void getEmployePrenomById() {
+	void getEmployePrenomById() {
 		assertEquals("bernar", iemployeservice.getEmployePrenomById(15));
 	}
-	
-	
+
+
 	@Test
-	public void getEmployePrenomById2() {
+	void getEmployePrenomById2() {
 		assertNotEquals("bernar2", iemployeservice.getEmployePrenomById(1));
 	}
-	
+
 	@Test
-	public void getNombreEmployeJPQL() {
+	void getNombreEmployeJPQL() {
 		assertEquals(20, iemployeservice.getNombreEmployeJPQL());
 	}
-	
-	
+
+
 	@Test
-	public void getNombreEmployeJPQL2() {
+	void getNombreEmployeJPQL2() {
 		assertNotEquals(17, iemployeservice.getNombreEmployeJPQL());
 	}
-	
+
 	/*@Test
-	public void getAllEmployeNamesJPQL() {
-		//String[] tab  = { "alex" , "alex"}; 
-	
+	void getAllEmployeNamesJPQL() {
+		//String[] tab  = { "alex" , "alex"};
+
 		assertEquals(Arrays.asList("alex", "alex").toArray(), iemployeservice.getAllEmployeNamesJPQL());
 	}*/
-	
-	
+
+
 }
