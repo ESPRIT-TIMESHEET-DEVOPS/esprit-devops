@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-
+// SADEK
 @Entity
 public class Employe implements Serializable {
 	
