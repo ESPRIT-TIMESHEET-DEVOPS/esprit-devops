@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Mission;
+import tn.esprit.spring.repository.DepartementRepository;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import java.util.Random;
 class MissionServiceImplTest {
     @Autowired IMissionService missionService;
     @Autowired IDepartementService departementService;
+    @Autowired DepartementRepository departementRepository;
     private List<Departement> departementList;
     @Order(1)
     @Test

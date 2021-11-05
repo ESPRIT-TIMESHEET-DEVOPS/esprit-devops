@@ -1,0 +1,69 @@
+version: "3.7"
+services:
+  db:
+    container_name: timesheet-db
+    image: mysql:8.0.27
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: 'timesheet'
+      MYSQL_ROOT_PASSWORD: '1Ac2620f'
+#      MYSQL_ROOT_HOST: '%'
+    cap_add:
+      - SYS_NICE
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./db:/var/lib/mysql
+      - "./scripts/schema.sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
+    networks:
+      - timesheet-net
+#  jenkins:
+#    image: jenkins:2.60.3
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - jenkins:/var/jenkins_home
+##    networks:
+##      - timesheet-net
+#    environment:
+#      JENKINS_OPTS: "--prefix=/jenkins"
+#  nexus:
+#    image: sonatype/nexus3:latest
+#    environment:
+#      NEXUS_CONTEXT: "nexus"
+##    networks:
+##      - timesheet-net
+#    ports:
+#      - "8081:8081"
+#    volumes:
+#      - nexus:/nexus-data
+  timesheet-app:
+    build: .
+    depends_on:
+      - db
+#      - nexus
+#      - jenkins
+    networks:
+      - timesheet-net
+    ports:
+      - "9090:9090"
+#    command: "mvn clean spring-boot:run"
+networks:
+  timesheet-net:
+volumes:
+  db:
+  jenkins:
+  nexus:
+
+
+
+
+
+#    environment:
+#      SPRING_APPLICATION_JSON: '{
+#        "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false",
+#        "spring.datasource.username" : "$MYSQLDB_USER",
+#        "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
+#      }'

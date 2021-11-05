@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.DispatcherType;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ocpsoft.rewrite.servlet.RewriteFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import tn.esprit.spring.config.LoginFilter;
 
 @SpringBootApplication
-@EnableAutoConfiguration
 public class TimesheetApplication {
 
 	public static void main(String[] args) {SpringApplication.run(TimesheetApplication.class, args);}

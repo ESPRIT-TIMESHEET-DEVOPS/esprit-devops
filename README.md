@@ -25,3 +25,6 @@ Vulnerabilities :
 
 Code smells :
 ![img.png](screenshots/sonarcube4.png)
+
+Nexus deploy :
+mvn clean package deploy:deploy-file -DgroupId=tn.esprit.spring e -DartifactId=timesheet1 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/timesheet-1.0jar
