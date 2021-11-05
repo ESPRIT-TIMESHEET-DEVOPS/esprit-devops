@@ -41,6 +41,7 @@ services:
 #      - nexus:/nexus-data
   timesheet-app:
     build: .
+    restart: on-failure
     depends_on:
       - db
 #      - nexus
