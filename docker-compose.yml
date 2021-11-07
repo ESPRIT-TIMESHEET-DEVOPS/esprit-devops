@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 services:
   db:
     container_name: timesheet-db
@@ -7,7 +7,6 @@ services:
     environment:
       MYSQL_DATABASE: 'timesheet'
       MYSQL_ROOT_PASSWORD: '1Ac2620f'
-#      MYSQL_ROOT_HOST: '%'
     cap_add:
       - SYS_NICE
     ports:
@@ -19,6 +18,50 @@ services:
       - "./scripts/schema.sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
       - timesheet-net
+  postgre-db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=sonarqube
+      - POSTGRES_PASSWORD=sonarpass
+      - POSTGRES_DB=sonarqube
+    volumes:
+      - sonarqube_db:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - timesheet-net
+  sonarqube:
+    image: sonarqube:9.1-community
+    restart: unless-stopped
+    depends_on:
+      - postgre-db
+      - init
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonarqube
+      - SONARQUBE_JDBC_PASSWORD=sonarpass
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgre-db:5432/sonarqube
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+    networks:
+      - timesheet-net
+    ulimits:
+      nproc: 131072
+      nofile:
+        soft: 8192
+        hard: 131072
+  init:
+    image: bash
+    privileged: true
+    user: root
+    volumes:
+      - ./scripts/sonarqube/init.sh:/opt/init-sonarqube.sh
+    command: [ "sh", "-e", "/opt/init-sonarqube.sh" ]
 #  jenkins:
 #    image: jenkins:2.60.3
 #    ports:
@@ -43,24 +86,29 @@ services:
     build: .
     depends_on:
       - db
-#      - nexus
-#      - jenkins
+      - sonarqube
     networks:
       - timesheet-net
     ports:
       - "9090:9090"
-#    command: "mvn clean spring-boot:run"
 networks:
   timesheet-net:
 volumes:
   db:
   jenkins:
   nexus:
+  postgresql_data:
+  sonarqube_bundled-plugins:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_db:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
 
+# SonarQube token : 77c8141aeed6f00a04b5099253a66d6f886271d9
 
-
-
-
+# MYSQL_ROOT_HOST: '%'
 #    environment:
 #      SPRING_APPLICATION_JSON: '{
 #        "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false",

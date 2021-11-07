@@ -17,6 +17,13 @@
 	<properties>
 <!--		<java.version>12</java.version>-->
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		<sonar.projectKey>timesheet-app</sonar.projectKey>
+		<sonar.login>
+			77c8141aeed6f00a04b5099253a66d6f886271d9
+		</sonar.login>
+		<sonar.scm.provider>
+			git
+		</sonar.scm.provider>
 	</properties>
 
 	<dependencies>

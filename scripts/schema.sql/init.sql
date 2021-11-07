@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS sonarqube;
 CREATE DATABASE IF NOT EXISTS timesheet;
 USE timesheet;
 
