@@ -85,6 +85,7 @@ under the License.
      | Specifies a further group identifier to use for plugin lookup.
     <pluginGroup>com.your.plugins</pluginGroup>
     -->
+    <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
   </pluginGroups>
 
   <!-- proxies
@@ -229,7 +230,18 @@ under the License.
       </repositories>
     </profile>
     -->
-
+    <profile>
+      <id>sonar</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!-- Optional URL to server. Default value is http://localhost:9000 -->
+        <sonar.host.url>
+          http://sonarqube:9000
+        </sonar.host.url>
+      </properties>
+    </profile>
     <!--
      | Here is another profile, activated by the system property 'target-env'
      | with a value of 'dev', which provides a specific path to the Tomcat

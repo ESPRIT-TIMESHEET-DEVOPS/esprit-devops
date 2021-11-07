@@ -1,7 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sonarqube;
 CREATE DATABASE IF NOT EXISTS timesheet;
 USE timesheet;
-
 -- phpMyAdmin SQL Dump
 -- version 5.1.1
 -- https://www.phpmyadmin.net/

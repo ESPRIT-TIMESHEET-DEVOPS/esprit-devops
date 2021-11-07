@@ -115,10 +115,7 @@ class MissionServiceImplTest {
             log.info("Save failed as it should");
             Assertions.assertTrue(true, "Exception caught because Add doesnt pass validation");
         }
-
     }
-
-
     private String generateRandomString(int length){
         byte[] array = new byte[length];
         new Random().nextBytes(array);
