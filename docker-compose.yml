@@ -19,7 +19,7 @@ services:
     networks:
       - timesheet-net
   postgre-db:
-    image: postgres
+    image: postgres:14-alpine
     restart: unless-stopped
     environment:
       - POSTGRES_USER=sonarqube
