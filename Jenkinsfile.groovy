@@ -1,7 +1,3 @@
-node {
-//    OK
-
-}
 pipeline {
     agent any
     tools { 
