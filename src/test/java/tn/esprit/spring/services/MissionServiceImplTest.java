@@ -28,8 +28,6 @@ class MissionServiceImplTest {
     @Order(1)
     @Test
     void testTruthy() throws Exception {
-        log.info("1");
-        log.info("Truthy add");
         departementList = departementService.getAllDepartements();
         if(departementList.isEmpty()) {
             log.info("no departments in DB");
@@ -57,7 +55,6 @@ class MissionServiceImplTest {
         int size = paginated.size();
         Assertions.assertNotNull(paginated);
         Assertions.assertFalse(paginated.isEmpty());
-        Assertions.assertTrue(paginated.size() >= 1);
         log.info("Truthy update ");
         Mission copy = mission;
         String name = generateRandomString(11), description = generateRandomString(11);
@@ -95,8 +92,6 @@ class MissionServiceImplTest {
     @Order(2)
     @Test
     void testFalsy(){
-        log.info("2");
-        // SHOULD GET REJECTED BY THE @VALIDATED Annotation
         String name = generateRandomString(6), description = generateRandomString(255);
         Departement departement = departementService.getAllDepartements().get(0);
         try {
