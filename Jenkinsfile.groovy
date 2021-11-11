@@ -9,42 +9,33 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
     stages {
-//        stage('SCM') {
-//            steps{
-//                checkout scm
-//            }
-//        }
-//        stage('Test') {
-//            steps{
-//                withMaven {
-//                    sh "mvn clean test"
-//                }
-//            }
-//        }
-//        stage('SonarQube Analysis') {
-//            steps{
-//                withSonarQubeEnv('Default SonarQube') {
-//                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
-//                }
-//            }
-//        }
-        stage('Build'){
+        stage('Test') {
+            steps{
+                withMaven {
+                    sh "mvn clean test"
+                }
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps{
+                withSonarQubeEnv('Default SonarQube') {
+                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
+                }
+            }
+        }
+        stage('Local Integration Tests') {
+            withMaven {
+                "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+                step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+            }
+        }
+        stage('Build & Push docker image'){
             steps{
                 withMaven {
                     sh "mvn spring-boot:build-image -DskipTests"
                 }
             }
         }
-//        stage('Login') {
-//            steps {
-//                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-//            }
-//        }
-//        stage('Push') {
-//            steps {
-//                sh 'docker push espritchihab/timesheet:1.0'
-//            }
-//        }
     }
     post {
         always {
@@ -66,10 +57,5 @@ pipeline {
 //            rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
 //        }
 //    }
-//    stage('Local Integration Tests') {
-//        withMaven {
-//            "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
-//            step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
-//        }
-//    }
+
 // credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a',

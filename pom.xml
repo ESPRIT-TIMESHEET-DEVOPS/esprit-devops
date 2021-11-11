@@ -120,13 +120,14 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
+						<name>espritchihab/${project.artifactId}:${project.version}</name>
 						<publish>true</publish>
 					</image>
 					<docker>
 						<publishRegistry>
 							<username>espritchihab</username>
-							<password>2Bd3731g+</password>
-							<url>https://docker.io/</url>
+							<token>a24e749a-9c6e-48c7-9046-118baeceaf70</token>
+							<url>https://registry.hub.docker</url>
 							<email>chihab.hajji@esprit.tn</email>
 						</publishRegistry>
 					</docker>
