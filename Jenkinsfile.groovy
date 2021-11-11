@@ -9,10 +9,10 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
     stage('Build docker image') {
-        stage('SCM') {
-            checkout scm
-        }
         stages {
+            stage('SCM') {
+                checkout scm
+            }
             stage('Build'){
                 withMaven {
                     sh "mvn spring-boot:build-image"
