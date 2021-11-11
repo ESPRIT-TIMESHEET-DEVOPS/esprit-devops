@@ -9,11 +9,11 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
     stages {
-        stage('SCM') {
-            steps{
-                checkout scm
-            }
-        }
+//        stage('SCM') {
+//            steps{
+//                checkout scm
+//            }
+//        }
         stage('Test') {
             steps{
                 withMaven {
@@ -26,6 +26,21 @@ pipeline {
                 withSonarQubeEnv('Default SonarQube') {
                     sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
                 }
+            }
+        }
+        stage('Build'){
+            withMaven {
+                sh "mvn spring-boot:build-image"
+            }
+        }
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push') {
+            steps {
+                sh 'docker push espritchihab/timesheet:1.0'
             }
         }
     }
