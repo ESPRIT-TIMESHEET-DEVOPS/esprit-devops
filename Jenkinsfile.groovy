@@ -8,21 +8,22 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    stage('SCM') {
-        checkout scm
-    }
-    stage('Test') {
-        withMaven {
-            sh "mvn clean test"
+    stages {
+        stage('SCM') {
+            checkout scm
+        }
+        stage('Test') {
+            withMaven {
+                sh "mvn clean test"
+            }
+        }
+        stage('SonarQube Analysis') {
+            def mvn = tool 'Default Maven';
+            withSonarQubeEnv() {
+                sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
+            }
         }
     }
-    stage('SonarQube Analysis') {
-        def mvn = tool 'Default Maven';
-        withSonarQubeEnv() {
-            sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
-        }
-    }
-
 }
 //        post {
 //            always {
