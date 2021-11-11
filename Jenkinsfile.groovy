@@ -24,9 +24,11 @@ pipeline {
             }
         }
         stage('Local Integration Tests') {
-            withMaven {
-                "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
-                step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+            steps{
+                withMaven {
+                    "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+                    step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+                }
             }
         }
         stage('Build & Push docker image'){
@@ -36,6 +38,12 @@ pipeline {
                 }
             }
         }
+//        stage('Deploy to Nexus') {
+//            withMaven {
+//                sh "mvn install deploy -DskipTests"
+//                rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
+//            }
+//        }
     }
     post {
         always {
@@ -49,13 +57,3 @@ pipeline {
         }
     }
 }
-
-
-//    stage('Deploy to Nexus') {
-//        withMaven {
-//            sh "mvn install deploy -DskipTests"
-//            rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
-//        }
-//    }
-
-// credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a',
