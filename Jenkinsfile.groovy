@@ -8,41 +8,21 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    stages {
-        stage('SCM') {
-            checkout scm
-        }
-        stage('Test') {
-            withMaven {
-                sh "mvn clean test"
-            }
-        }
-        stage('SonarQube Analysis') {
-            def mvn = tool 'Default Maven';
-            withSonarQubeEnv() {
-                sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
-            }
-        }
-        stage('Build docker image') {
-            stages {
-                stage('Build') {
-                    withMaven {
-                        sh "mvn spring-boot:build-image"
-                    }
-                }
-                stage('Login') {
-                    steps {
-                        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    }
-                }
-                stage('Push') {
-                    steps {
-                        sh 'docker push espritchihab/timesheet:1.0'
-                    }
-                }
-            }
+    stage('SCM') {
+        checkout scm
+    }
+    stage('Test') {
+        withMaven {
+            sh "mvn clean test"
         }
     }
+    stage('SonarQube Analysis') {
+        def mvn = tool 'Default Maven';
+        withSonarQubeEnv() {
+            sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
+        }
+    }
+
 }
 //        post {
 //            always {
