@@ -39,6 +39,8 @@ pipeline {
             }
         }
         stage('Build docker image') {
+            IMAGE = readMavenPom().getArtifactId()
+            VERSION = readMavenPom().getVersion()
             steps {
                 sh "docker build -t espritchihab/${IMAGE}:${VERSION} ."
             }
@@ -49,6 +51,8 @@ pipeline {
             }
         }
         stage('Push to docker') {
+            IMAGE = readMavenPom().getArtifactId()
+            VERSION = readMavenPom().getVersion()
             steps {
                 sh "docker push espritchihab/${IMAGE}:${VERSION}"
             }
