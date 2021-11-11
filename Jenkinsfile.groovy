@@ -9,7 +9,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
 
-    node {
+    stages {
         stage('SCM') {
             checkout scm
         }
