@@ -30,30 +30,30 @@ services:
 #      - postgresql_data:/var/lib/postgresql/data
 #    networks:
 #      - timesheet-net
-  sonarqube:
-    image: sonarqube:9.1-community
-    restart: on-failure
-    stop_grace_period: 3600ms
-    depends_on:
-      - init
-    environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-      - "9092:9092"
-    volumes:
-      - sonarqube_conf:/opt/sonarqube/conf
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-    networks:
-      - timesheet-net
-    ulimits:
-      nproc: 131072
-      nofile:
-        soft: 8192
-        hard: 131072
+#  sonarqube:
+#    image: sonarqube:9.1-community
+#    restart: on-failure
+#    stop_grace_period: 3600ms
+#    depends_on:
+#      - init
+#    environment:
+#      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+#    ports:
+#      - "9000:9000"
+#      - "9001:9001"
+#      - "9092:9092"
+#    volumes:
+#      - sonarqube_conf:/opt/sonarqube/conf
+#      - sonarqube_data:/opt/sonarqube/data
+#      - sonarqube_extensions:/opt/sonarqube/extensions
+#      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+#    networks:
+#      - timesheet-net
+#    ulimits:
+#      nproc: 131072
+#      nofile:
+#        soft: 8192
+#        hard: 131072
   jenkins:
     image: jenkins/jenkins:lts
     restart: on-failure
@@ -97,27 +97,27 @@ services:
 #      - timesheet-net
 #    ports:
 #      - "9090:9090"
-  init:
-    image: bash
-    privileged: true
-    user: root
-    volumes:
-      - ./scripts/sonarqube/init.sh:/opt/init-sonarqube.sh
-    command: [ "sh", "-e", "/opt/init-sonarqube.sh" ]
+#  init:
+#    image: bash
+#    privileged: true
+#    user: root
+#    volumes:
+#      - ./scripts/sonarqube/init.sh:/opt/init-sonarqube.sh
+#    command: [ "sh", "-e", "/opt/init-sonarqube.sh" ]
 networks:
   timesheet-net:
 volumes:
 #  db:
   jenkins:
-  nexus-data:
+#  nexus-data:
 #  postgresql_data:
-  sonarqube_bundled-plugins:
-  sonarqube_conf:
-  sonarqube_data:
-  sonarqube_db:
-  sonarqube_extensions:
-  sonarqube_logs:
-  sonarqube_temp:
+#  sonarqube_bundled-plugins:
+#  sonarqube_conf:
+#  sonarqube_data:
+#  sonarqube_db:
+#  sonarqube_extensions:
+#  sonarqube_logs:
+#  sonarqube_temp:
 
 
 #   jenkins:
