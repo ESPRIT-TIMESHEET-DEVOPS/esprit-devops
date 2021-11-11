@@ -4,8 +4,9 @@ node {
         checkout scm
     }
     stage('SonarQube analysis') {
+        def mvn = tool 'Default Maven';
         withSonarQubeEnv(installationName: 'Default SonarQube') { // You can override the credential to be used
-            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+            sh '${mvn}/bin/mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
         }
     }
 }
@@ -65,3 +66,4 @@ node {
 //            step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
 //        }
 //    }
+// credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a',
