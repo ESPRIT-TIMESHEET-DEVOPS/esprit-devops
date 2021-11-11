@@ -48,21 +48,19 @@ pipeline {
         }
         stage('Push to docker') {
             steps {
-                sh 'docker push espritchihab/timesheet:latest'
+                pom = readMavenPom file: 'pom.xml'
+                sh 'docker push espritchihab/timesheet:'${pom.version}
             }
         }
-        stage('Archive result'){
-            steps {
-                junit '**/${...}/target/surefire-reports/TEST-*.xml'
-                archiveArtifacts '**/${...}/target/*.jar'
-            }
-        }
-//        stage('Deploy to Nexus') {
-//            withMaven {
+        stage('Deploy to Nexus') {
+            steps{
+//                            withMaven {
 //                sh "mvn install deploy -DskipTests"
 //                rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
 //            }
-//        }
+                sh 'echo done'
+            }
+        }
     }
     post {
         always {
