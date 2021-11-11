@@ -129,7 +129,6 @@
 					<docker>
 						<publishRegistry>
 							<username>espritchihab</username>
-							<token>a24e749a-9c6e-48c7-9046-118baeceaf70</token>
 							<url>https://registry.hub.docker</url>
 							<email>chihab.hajji@esprit.tn</email>
 						</publishRegistry>
@@ -139,6 +138,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
 				<configuration>
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 				</configuration>

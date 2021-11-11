@@ -36,11 +36,25 @@ pipeline {
                 sh "mvn clean install -DskipTests"
             }
         }
-        stage('Build & Push docker image'){
-            steps{
-                withMaven {
-                    sh "mvn spring-boot:build-image -DskipTests"
-                }
+        stage('Build') {
+            steps {
+                sh 'docker build -t espritchihab/timesheet:latest .'
+            }
+        }
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push') {
+            steps {
+                sh 'docker push espritchihab/timesheet:latest'
+            }
+        }
+        stage('Archive result'){
+            steps {
+                junit '**/${...}/target/surefire-reports/TEST-*.xml'
+                archiveArtifacts '**/${...}/target/*.war'
             }
         }
 //        stage('Deploy to Nexus') {
