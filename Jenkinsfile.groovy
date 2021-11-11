@@ -24,7 +24,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 def mvn = tool 'Default Maven';
-                withSonarQubeEnv() {
+                withSonarQubeEnv('Default SonarQube') {
                     sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
                 }
             }
