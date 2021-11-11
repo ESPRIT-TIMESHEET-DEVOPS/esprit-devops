@@ -8,10 +8,10 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    stage('SCM') {
-        checkout scm
-    }
     stage('Build docker image') {
+        stage('SCM') {
+            checkout scm
+        }
         stages {
             stage('Build'){
                 withMaven {
