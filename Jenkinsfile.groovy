@@ -1,13 +1,5 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.1-adoptopenjdk-11'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-login')
-    }
+node {
+
     stage('SCM') {
         checkout scm
     }
@@ -17,6 +9,31 @@ pipeline {
         }
     }
 }
+//        stage('Build docker image') {
+//        stages {
+//
+//            stage('Build'){
+//                withMaven {
+//                    sh "mvn spring-boot:build-image"
+//                }
+//            }
+//            stage('Login') {
+//                steps {
+//                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//                }
+//            }
+//            stage('Push') {
+//                steps {
+//                    sh 'docker push espritchihab/timesheet:1.0'
+//                }
+//            }
+//        }
+//        post {
+//            always {
+//                sh 'docker logout'
+//            }
+//        }
+//    }
 //    stage('Test') {
 //        withMaven {
 //            sh "mvn clean test"
