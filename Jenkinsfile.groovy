@@ -1,123 +1,70 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.8.1-adoptopenjdk-11'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    def mvn = tool 'Default Maven';
     stage('SCM') {
         checkout scm
     }
-    stage('Build docker image') {
+    stage('Test') {
         withMaven {
-            sh "${mvn}/bin/mvn spring-boot:build-image"
+            sh "mvn clean test"
         }
         post {
-            always {
-                deleteDir() /* clean up our workspace */
-            }
-            success {
-                mail to: 'chihab.hajji@esprit.tn',
-                        subject: "Successful Pipeline: ${currentBuild.fullDisplayName}",
-                        body: "Pipeline ${env.BUILD_URL} built with success!"
-            }
             failure {
                 mail to: 'chihab.hajji@esprit.tn',
                         subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                        body: "Something is wrong with ${env.BUILD_URL}'s SonarQubeAnalysis"
+                        body: "Something is wrong with ${env.BUILD_URL}'s test"
             }
         }
-        stages {
-            stage('Login') {
-
-                steps {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
-            }
-            stage('Push') {
-                steps {
-                    sh 'docker push bharathirajatut/nodeapp:latest'
-                }
-            }
-        }
-        post {
-            always {
-                sh 'docker logout'
-            }
-        }
-        stage('SonarQube Analysis') {
-            withSonarQubeEnv() {
-                sh "${mvn}/bin/mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar -DskipTests"
-            }
-        }
-        stages {
-            stage('Login') {
-
-                steps {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
-            }
-            stage('Push') {
-                steps {
-                    sh 'docker push bharathirajatut/nodeapp:latest'
-                }
-            }
-        }
-        post {
-            always {
-                sh 'docker logout'
-            }
-        }
-
     }
-}
-node {
-    def mvn = tool 'Default Maven';
-    stage('SCM') {
-        checkout scm
-    }
-    stage('Build docker image') {
-        withMaven {
-            sh "${mvn}/bin/mvn spring-boot:build-image"
-        }
-        post {
-            always {
-                deleteDir() /* clean up our workspace */
-            }
-            success {
-                mail to: 'chihab.hajji@esprit.tn',
-                        subject: "Successful Pipeline: ${currentBuild.fullDisplayName}",
-                        body: "Pipeline ${env.BUILD_URL} built with success!"
-            }
-            failure {
-                mail to: 'chihab.hajji@esprit.tn',
-                        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                        body: "Something is wrong with ${env.BUILD_URL}'s SonarQubeAnalysis"
-            }
-        }
-        stage('SonarQube Analysis') {
-            withSonarQubeEnv() {
-                sh "${mvn}/bin/mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar -DskipTests"
-            }
-        }
-        stage('Test') {
+    stage('SonarQube Analysis') {
+        withSonarQubeEnv() {
             withMaven {
-                sh "${mvn}/bin/mvn clean test"
-            }
-            post {
-                failure {
-                    mail to: 'chihab.hajji@esprit.tn',
-                            subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                            body: "Something is wrong with ${env.BUILD_URL}'s test"
-                }
+                sh "mvn clean sonar:sonar -DskipTests"
             }
         }
-        stage('Deploy to Nexus') {
-            "${mvn}/bin/mvn install deploy -DskipTests"
-            archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
+    }
+    stage('Deploy to Nexus') {
+        withMaven {
+            sh "mvn install deploy -DskipTests"
+            rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
         }
-        stage('Local Integration Tests') {
-            "${mvn}/bin/mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+    }
+    stage('Local Integration Tests') {
+        withMaven {
+            "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
             step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
         }
     }
+    stage('Build docker image') {
+        stages {
+            stage('Build'){
+                withMaven {
+                    sh "mvn spring-boot:build-image"
+                }
+            }
+            stage('Login') {
+                steps {
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                }
+            }
+            stage('Push') {
+                steps {
+                    sh 'docker push espritchihab/timesheet:1.0'
+                }
+            }
+        }
+        post {
+            always {
+                sh 'docker logout'
+            }
+        }
+    }
 }
+
