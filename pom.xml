@@ -118,6 +118,20 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>https://docker.io/espritchihab/${project.artifactId}</name>
+						<publish>true</publish>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>espritchihab</username>
+							<password>a24e749a-9c6e-48c7-9046-118baeceaf70</password>
+							<url>https://docker.io/</url>
+							<email>chihab.hajji@esprit.tn</email>
+						</publishRegistry>
+					</docker>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -146,12 +160,12 @@
 		<repository>
 			<id>nexus</id>
 			<name>Releases</name>
-			<url>http://localhost:8081/repository/maven-releases</url>
+			<url>https://50be-197-1-239-58.eu.ngrok.io/repository/maven-releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus</id>
 			<name>Snapshot</name>
-			<url>http://localhost:8081/repository/maven-snapshots</url>
+			<url>https://50be-197-1-239-58.eu.ngrok.io/repository/maven-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
