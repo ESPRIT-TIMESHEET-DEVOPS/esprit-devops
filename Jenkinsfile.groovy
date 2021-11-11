@@ -1,12 +1,11 @@
 node {
-
     stage('SCM') {
         checkout scm
     }
-    stage('SonarQube analysis') {
+    stage('SonarQube Analysis') {
         def mvn = tool 'Default Maven';
-        withSonarQubeEnv(installationName: 'Default SonarQube') { // You can override the credential to be used
-            sh '${mvn}/bin/mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+        withSonarQubeEnv() {
+            sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar"
         }
     }
 }
