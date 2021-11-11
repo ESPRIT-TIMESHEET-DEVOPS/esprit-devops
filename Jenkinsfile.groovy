@@ -18,13 +18,6 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps{
-                withSonarQubeEnv('Default SonarQube') {
-                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
-                }
-            }
-        }
         stage('Local Integration Tests') {
             steps{
                 withMaven{
