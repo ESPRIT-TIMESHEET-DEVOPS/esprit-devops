@@ -55,11 +55,10 @@ pipeline {
         }
         stage('Deploy to Nexus') {
             steps{
-                sh "echo delegated to Github Actions"
-//                withMaven {
-//                    sh "mvn --settings settings.xml install deploy -DskipTests"
-//                    archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
-//               }
+                withMaven {
+                    sh "mvn clean package --settings settings.xml deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=1.2 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=nexus -Durl=https://50be-197-1-239-58.eu.ngrok.io/repository/maven-releases/ -Dfile=target/timesheet-1.2.jar -DskipTests"
+                    archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
+               }
             }
         }
     }
