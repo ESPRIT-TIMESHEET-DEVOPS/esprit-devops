@@ -40,7 +40,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh 'docker build -t espritchihab/'${IMAGE}':'${VERSION}' .'
+                sh "docker build -t espritchihab/${IMAGE}:${VERSION} ."
             }
         }
         stage('Login to docker') {
@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Push to docker') {
             steps {
-                sh 'docker push espritchihab/'${IMAGE}':'${VERSION}
+                sh "docker push espritchihab/${IMAGE}:${VERSION}"
             }
         }
         stage('Deploy to Nexus') {
