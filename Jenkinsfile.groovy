@@ -1,15 +1,14 @@
-
-
-agent {
-    docker {
-        image 'maven:3.8.1-adoptopenjdk-11'
-        args '-v /root/.m2:/root/.m2'
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.8.1-adoptopenjdk-11'
+            args '-v /root/.m2:/root/.m2'
+        }
     }
-}
-environment {
-    DOCKERHUB_CREDENTIALS = credentials('docker-login')
-}
-    node {
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-login')
+    }
+    stages {
         stage('SCM') {
             checkout scm
         }
@@ -55,7 +54,7 @@ environment {
             }
         }
     }
-
+}
 //        post {
 
 //        }
