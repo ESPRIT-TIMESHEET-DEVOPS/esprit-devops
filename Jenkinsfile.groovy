@@ -7,6 +7,8 @@ pipeline {
     }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
+        IMAGE = readMavenPom().getArtifactId()
+        VERSION = readMavenPom().getVersion()
     }
     stages {
         stage('Test') {
@@ -38,7 +40,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh 'docker build -t espritchihab/timesheet:latest .'
+                sh 'docker build -t espritchihab/'${IMAGE}':'${VERSION}' .'
             }
         }
         stage('Login to docker') {
@@ -48,10 +50,7 @@ pipeline {
         }
         stage('Push to docker') {
             steps {
-                step{
-                    pom = readMavenPom file: 'pom.xml'
-                }
-                sh 'docker push espritchihab/timesheet:'${pom.version}
+                sh 'docker push espritchihab/'${IMAGE}':'${VERSION}
             }
         }
         stage('Deploy to Nexus') {
