@@ -1,4 +1,5 @@
 node {
+  def mvn = tool 'Default Maven';
   stage('SCM') {
     checkout scm
   }
@@ -15,7 +16,6 @@ node {
     }
   }
   stage('SonarQube Analysis') {
-    def mvn = tool 'Default Maven';
     withSonarQubeEnv() {
       sh "${mvn}/bin/mvn clean verify sonar:sonar"
     }
