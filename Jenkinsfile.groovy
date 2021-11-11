@@ -8,37 +8,12 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    stage('Build docker image') {
-        stages {
-            stage('SCM') {
-                checkout scm
-            }
-            stage('Build'){
-                withMaven {
-                    sh "mvn spring-boot:build-image"
-                }
-            }
-            stage('Login') {
-                steps {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
-            }
-            stage('Push') {
-                steps {
-                    sh 'docker push espritchihab/timesheet:1.0'
-                }
-            }
-        }
+    stage('SCM') {
+        checkout scm
     }
     stage('SonarQube analysis') {
-        def scannerHome = tool 'SonarScanner 4.0';
-        withSonarQubeEnv('My SonarQube Server') { // If you have configured more than one global server connection, you can specify its name
-            sh "${scannerHome}/bin/sonar-scanner"
-        }
-    }
-    post {
-        always {
-            sh 'docker logout'
+        withSonarQubeEnv(credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a', installationName: 'My SonarQube Server') { // You can override the credential to be used
+            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
         }
     }
 }
