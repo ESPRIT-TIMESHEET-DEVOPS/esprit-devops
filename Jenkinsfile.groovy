@@ -18,6 +18,13 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps{
+                withSonarQubeEnv('Default SonarQube') {
+                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
+                }
+            }
+        }
         stage('Local Integration Tests') {
             steps{
                 withMaven{
@@ -49,7 +56,7 @@ pipeline {
         stage('Deploy to Nexus') {
             steps{
                 withMaven {
-                    sh "mvn clean package --settings settings.xml deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=1.2 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=nexus -Durl=https://50be-197-1-239-58.eu.ngrok.io/repository/maven-releases/ -Dfile=target/timesheet-1.2.jar -DskipTests"
+                    sh "mvn clean package --settings settings.xml deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=${IMAGE} -Dversion=${VERSION} -DgeneratePom=true -Dpackaging=jar -DrepositoryId=nexus -Durl=https://50be-197-1-239-58.eu.ngrok.io/repository/maven-releases/ -Dfile=target/${IMAGE}-${VERSION}.jar -DskipTests"
                     archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
                }
             }
