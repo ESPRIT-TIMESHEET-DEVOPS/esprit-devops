@@ -20,6 +20,14 @@ node {
       sh "${mvn}/bin/mvn clean verify sonar:sonar -DskipTests"
     }
   }
+  stage('Deploy to Nexus') {
+    "${mvn}/bin/mvn install deploy -DskipTests"
+    archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
+   }
+  stage('Local Integration Tests') {
+     "${mvn}/bin/mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+      step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+  }
   stage('Build docker image') {
     withMaven {
         sh "${mvn}/bin/mvn spring-boot:build-image"
