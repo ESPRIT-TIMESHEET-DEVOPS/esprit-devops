@@ -3,7 +3,12 @@ node {
   stage('SCM') {
     checkout scm
   }
-  stage ('Test') {
+  stage('SonarQube Analysis') {
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -DskipTests"
+    }
+  }
+    stage ('Test') {
     withMaven {
       sh "${mvn}/bin/mvn clean test"
     }
@@ -13,11 +18,6 @@ node {
              subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
              body: "Something is wrong with ${env.BUILD_URL}'s test"
         }
-    }
-  }
-  stage('SonarQube Analysis') {
-    withSonarQubeEnv() {
-      sh "${mvn}/bin/mvn clean verify sonar:sonar -DskipTests"
     }
   }
   stage('Deploy to Nexus') {
