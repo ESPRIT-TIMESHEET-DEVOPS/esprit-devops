@@ -5,7 +5,7 @@ node {
   }
   stage ('Test') {
     withMaven {
-      sh "mvn test"
+      sh "${mvn}/bin/mvn test"
     }
     post{
         failure {
