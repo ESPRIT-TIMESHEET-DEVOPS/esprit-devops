@@ -81,22 +81,22 @@ services:
 #      NGROK_CONFIG: /usr/ngrok/config.yml
 #    networks:
 #      - timesheet-net
-  nexus:
-    image: sonatype/nexus3
-    restart: on-failure
-    networks:
-      - timesheet-net
-    volumes:
-      - "nexus-data:/nexus-data"
-    ports:
-      - "8081:8081"
-      - "8083:8083"
-  timesheet-app:
-    build: .
-    networks:
-      - timesheet-net
-    ports:
-      - "9090:9090"
+#  nexus:
+#    image: sonatype/nexus3
+#    restart: on-failure
+#    networks:
+#      - timesheet-net
+#    volumes:
+#      - "nexus-data:/nexus-data"
+#    ports:
+#      - "8081:8081"
+#      - "8083:8083"
+#  timesheet-app:
+#    build: .
+#    networks:
+#      - timesheet-net
+#    ports:
+#      - "9090:9090"
   init:
     image: bash
     privileged: true

@@ -1,5 +1,4 @@
 node {
-//    OK
     stage('SCM') {
         checkout scm
     }
