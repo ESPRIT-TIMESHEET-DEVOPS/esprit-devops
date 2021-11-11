@@ -8,8 +8,8 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-login')
     }
-    stages {
-        stage('SCM') {
+    steps {
+        step('SCM') {
             checkout scm
         }
         stage('Test') {
