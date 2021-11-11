@@ -36,17 +36,17 @@ pipeline {
                 sh "mvn clean install -DskipTests"
             }
         }
-        stage('Build') {
+        stage('Build docker image') {
             steps {
                 sh 'docker build -t espritchihab/timesheet:latest .'
             }
         }
-        stage('Login') {
+        stage('Login to docker') {
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-        stage('Push') {
+        stage('Push to docker') {
             steps {
                 sh 'docker push espritchihab/timesheet:latest'
             }
@@ -54,7 +54,7 @@ pipeline {
         stage('Archive result'){
             steps {
                 junit '**/${...}/target/surefire-reports/TEST-*.xml'
-                archiveArtifacts '**/${...}/target/*.war'
+                archiveArtifacts '**/${...}/target/*.jar'
             }
         }
 //        stage('Deploy to Nexus') {
