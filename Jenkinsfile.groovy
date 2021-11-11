@@ -5,7 +5,7 @@ node {
   }
   stage('SonarQube Analysis') {
     withSonarQubeEnv() {
-      sh "${mvn}/bin/mvn clean verify sonar:sonar -DskipTests"
+      sh "${mvn}/bin/mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar -DskipTests"
     }
   }
     stage ('Test') {
