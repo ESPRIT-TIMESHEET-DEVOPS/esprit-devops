@@ -55,11 +55,11 @@ pipeline {
         }
         stage('Deploy to Nexus') {
             steps{
-                withMaven {
-                    sh "echo delegated to Github Actions"
+                sh "echo delegated to Github Actions"
+//                withMaven {
 //                    sh "mvn --settings settings.xml install deploy -DskipTests"
 //                    archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
-               }
+//               }
             }
         }
     }
