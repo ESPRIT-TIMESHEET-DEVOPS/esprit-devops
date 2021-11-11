@@ -18,7 +18,6 @@ public class RestControlMission implements IRestControlMission{
     private MissionServiceImpl service;
     @Autowired
     public RestControlMission(MissionServiceImpl service){
-        System.out.println("Hello world");
         this.service = service;
     }
     @Override
