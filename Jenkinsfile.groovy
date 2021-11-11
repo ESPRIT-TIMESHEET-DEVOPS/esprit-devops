@@ -11,52 +11,11 @@ pipeline {
         VERSION = readMavenPom().getVersion()
     }
     stages {
-        stage('Test') {
-            steps{
-                withMaven {
-                    sh "mvn clean test"
-                }
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps{
-                withSonarQubeEnv('Default SonarQube') {
-                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -DskipTests"
-                }
-            }
-        }
-        stage('Local Integration Tests') {
-            steps{
-                withMaven{
-                    sh "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify -DskipTests"
-                }
-//                step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
-            }
-        }
-        stage('Build'){
-            steps{
-                sh "mvn clean install -DskipTests"
-            }
-        }
-        stage('Build docker image') {
-            steps {
-                sh "docker build -t espritchihab/${IMAGE}:${VERSION} ."
-            }
-        }
-        stage('Login to docker') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('Push to docker') {
-            steps {
-                sh "docker push espritchihab/${IMAGE}:${VERSION}"
-            }
-        }
+
         stage('Deploy to Nexus') {
             steps{
                 withMaven {
-                    sh "mvn install deploy -DskipTests"
+                    sh "mvn --settings settings.xml install deploy -DskipTests"
                     archiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
                }
             }
