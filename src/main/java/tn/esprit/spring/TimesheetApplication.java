@@ -15,12 +15,10 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 import tn.esprit.spring.config.LoginFilter;
-@Slf4j
 @SpringBootApplication
 public class TimesheetApplication {
 
 	public static void main(String[] args) {
-		log.warn("Starting lmao");
 		SpringApplication.run(TimesheetApplication.class, args);}
 
 	@Bean

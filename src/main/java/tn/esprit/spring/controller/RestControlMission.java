@@ -1,5 +1,6 @@
 package tn.esprit.spring.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import tn.esprit.spring.services.MissionServiceImpl;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/missions")
 public class RestControlMission implements IRestControlMission{
@@ -24,6 +25,7 @@ public class RestControlMission implements IRestControlMission{
     public Optional<Mission> getById(int id) {return this.service.getById(id);}
     @Override
     public List<Mission> paginated(int page, int size, String name, String departement) {
+        log.info("Fetching paginated");
         return this.service.getPaginated(page,size,name,departement);
     }
     @Override
