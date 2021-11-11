@@ -1,4 +1,4 @@
-node {
+pipeline {
     agent {
         docker {
             image 'maven:3.8.1-adoptopenjdk-11'
@@ -10,37 +10,6 @@ node {
     }
     stage('SCM') {
         checkout scm
-    }
-    stage('Test') {
-        withMaven {
-            sh "mvn clean test"
-        }
-        post {
-            failure {
-                mail to: 'chihab.hajji@esprit.tn',
-                        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                        body: "Something is wrong with ${env.BUILD_URL}'s test"
-            }
-        }
-    }
-    stage('SonarQube Analysis') {
-        withSonarQubeEnv() {
-            withMaven {
-                sh "mvn clean sonar:sonar -DskipTests"
-            }
-        }
-    }
-    stage('Deploy to Nexus') {
-        withMaven {
-            sh "mvn install deploy -DskipTests"
-            rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
-        }
-    }
-    stage('Local Integration Tests') {
-        withMaven {
-            "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
-            step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
-        }
     }
     stage('Build docker image') {
         stages {
@@ -60,11 +29,41 @@ node {
                 }
             }
         }
-        post {
-            always {
-                sh 'docker logout'
-            }
+    }
+    post {
+        always {
+            sh 'docker logout'
         }
     }
 }
-
+//    stage('Test') {
+//        withMaven {
+//            sh "mvn clean test"
+//        }
+//        post {
+//            failure {
+//                mail to: 'chihab.hajji@esprit.tn',
+//                        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+//                        body: "Something is wrong with ${env.BUILD_URL}'s test"
+//            }
+//        }
+//    }
+//    stage('SonarQube Analysis') {
+//        withSonarQubeEnv() {
+//            withMaven {
+//                sh "mvn clean sonar:sonar -DskipTests"
+//            }
+//        }
+//    }
+//    stage('Deploy to Nexus') {
+//        withMaven {
+//            sh "mvn install deploy -DskipTests"
+//            rchiveArtifacts artifacts: '**/timesheet-*.jar', onlyIfSuccessful: false
+//        }
+//    }
+//    stage('Local Integration Tests') {
+//        withMaven {
+//            "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+//            step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+//        }
+//    }
