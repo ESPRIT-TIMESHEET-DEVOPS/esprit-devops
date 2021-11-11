@@ -25,7 +25,9 @@ pipeline {
         }
         stage('Local Integration Tests') {
             steps{
-                "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+                withMaven{
+                    "mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent-integration failsafe:integration-test failsafe:verify"
+                }
                 step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
             }
         }
