@@ -2,6 +2,18 @@ node {
   stage('SCM') {
     checkout scm
   }
+  stage ('Test') {
+    withMaven {
+      sh "mvn test"
+    }
+    post{
+        failure {
+             mail to: 'chihab.hajji@esprit.tn',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}'s test"
+        }
+    }
+  }
   stage('SonarQube Analysis') {
     def mvn = tool 'Default Maven';
     withSonarQubeEnv() {
@@ -9,22 +21,17 @@ node {
     }
     post {
         always {
-            echo 'One way or another, I have finished'
             deleteDir() /* clean up our workspace */
         }
         success {
-            echo 'I succeeded!'
-        }
-        unstable {
-            echo 'I am unstable :/'
+             mail to: 'chihab.hajji@esprit.tn',
+             subject: "Successful Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Pipeline ${env.BUILD_URL} built with success!"
         }
         failure {
-             mail to: 'team@example.com',
+             mail to: 'chihab.hajji@esprit.tn',
              subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-             body: "Something is wrong with ${env.BUILD_URL}"
-        }
-        changed {
-            echo 'Things were different before...'
+             body: "Something is wrong with ${env.BUILD_URL}'s SonarQubeAnalysis"
         }
     }
   }
