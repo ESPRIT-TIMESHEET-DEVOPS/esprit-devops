@@ -125,7 +125,7 @@
 					<docker>
 						<publishRegistry>
 							<username>espritchihab</username>
-							<password>a24e749a-9c6e-48c7-9046-118baeceaf70</password>
+							<password>2Bd3731g+</password>
 							<url>https://docker.io/</url>
 							<email>chihab.hajji@esprit.tn</email>
 						</publishRegistry>
