@@ -17,7 +17,7 @@ node {
   }
   stage('SonarQube Analysis') {
     withSonarQubeEnv() {
-      sh "${mvn}/bin/mvn clean verify sonar:sonar"
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -DskipTests"
     }
     post {
         always {
