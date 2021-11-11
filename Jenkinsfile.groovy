@@ -29,18 +29,19 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            sh 'docker logout'
+            deleteDir()
+        }
+        failure {
+            mail to: 'chihab.hajji@esprit.tn',
+                    subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                    body: "Something is wrong with ${env.BUILD_URL}'s test"
+        }
+    }
 }
-//        post {
-//            always {
-//                sh 'docker logout'
-//                deleteDir()
-//            }
-//            failure {
-//                mail to: 'chihab.hajji@esprit.tn',
-//                        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-//                        body: "Something is wrong with ${env.BUILD_URL}'s test"
-//            }
-//        }
+
 
 //    stage('Deploy to Nexus') {
 //        withMaven {
