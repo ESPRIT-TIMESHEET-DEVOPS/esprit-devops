@@ -29,8 +29,10 @@ pipeline {
             }
         }
         stage('Build'){
-            withMaven {
-                sh "mvn spring-boot:build-image"
+            steps{
+                withMaven {
+                    sh "mvn spring-boot:build-image"
+                }
             }
         }
         stage('Login') {
